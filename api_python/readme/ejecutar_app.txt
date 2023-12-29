@@ -1,4 +1,4 @@
-0.source venv/bin/activate
+0. Ejecutar source venv/bin/activate
 1.Ejecutar uvicorn main:app (uvicorn nombre_archivo:nombre_aplicacion)
 2. Agregar ruta de inicio en @app.get('/')
 3. Ejecutar uvicorn main:app --reload (la bandera reload ayuda a recargar los cambios)
