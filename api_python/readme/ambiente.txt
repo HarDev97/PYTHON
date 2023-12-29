@@ -1,0 +1,8 @@
+En la terminal
+0. Ejecutar python -m venv venv
+0.1 Ejecutar source venv/bin/activate
+1. Ejecutar pip install fastapi
+1.1 Si requiere actualizar ejecutar python -m pip install --upgrade pip
+1.2 Volver a ejecutar -> pip install fastapi
+2. Ejecutar pip install uvicorn
+3. Crear main.py

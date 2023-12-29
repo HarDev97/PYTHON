@@ -1,0 +1,6 @@
+0.source venv/bin/activate
+1.Ejecutar uvicorn main:app (uvicorn nombre_archivo:nombre_aplicacion)
+2. Agregar ruta de inicio en @app.get('/')
+3. Ejecutar uvicorn main:app --reload (la bandera reload ayuda a recargar los cambios)
+4. Modificar puerto-> Ejecutar uvicorn main:app --reload --port 5000 (Cambia el puerto por donde escucha la app)
+5. Disponibilidad para todos los dispositivos de la red --> Ejecutar uvicorn main:app --reload --port 5000 --host 0.0.0.0 
