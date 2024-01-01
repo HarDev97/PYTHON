@@ -80,6 +80,12 @@ def message():
     return HTMLResponse('<h1>Hello world</h1>')  # Retornando html
 
 
+# Ruta de login
+@app.post('/login', tags=['Auth'])
+def login(user: User):
+    return user
+
+
 #Consulta todas las peliculas
 #Agregando modelo de respuesta response_model
 #Agregando códigos de estado status_code
