@@ -3,9 +3,12 @@
 
 from fastapi import FastAPI, Body, Path, Query
 from fastapi.responses import HTMLResponse, JSONResponse  #Imprime HTML
+
 #BaseModel crea un esquema de datos #Field valida campos
 from pydantic import BaseModel, Field
-from typing import Optional  #Genera atributos opcionales en las clases.
+
+#Optional genera atributos opcionales en las clases. - List para obtener modelos de respuesta
+from typing import Optional, List
 
 app = FastAPI()
 app.title = "API"
@@ -70,14 +73,17 @@ def message():
 
 
 #Consulta todas las peliculas
-@app.get('/movies', tags=['Movies'])
-def get_movies():
+@app.get(
+    '/movies', tags=['Movies'],
+    response_model=List[Movie])  #Agregando modelo de respuesta response_model
+def get_movies() -> List[
+    Movie]:  # -> List[Movie] indica que vamos a retornar una lista de peliculas
     return JSONResponse(content=movies)  #Retornando un JSON
 
 
 #Consulta pelicula por id
-@app.get('/movies/{id}', tags=["Movies"])
-def get_movie_by_id(id: int = Path(ge=1, le=2000)):  #Path valida ruta
+@app.get('/movies/{id}', tags=["Movies"], response_model=Movie)
+def get_movie_by_id(id: int = Path(ge=1, le=2000)) -> Movie:  #Path valida ruta
     #Filtrando
     for item in movies:
         if item["id"] == id:
@@ -88,9 +94,10 @@ def get_movie_by_id(id: int = Path(ge=1, le=2000)):  #Path valida ruta
 #Parámetros query - Query valida parámetros query
 
 
-@app.get('/movies/', tags=["Movies"])
+@app.get('/movies/', tags=["Movies"], response_model=List[Movie])
 def get_movies_by_query(category: str = Query(min_length=5, max_length=15),
-                        year: int = Query(default=None, ge=1900, le=2024)):
+                        year: int = Query(default=None, ge=1900,
+                                          le=2024)) -> List[Movie]:
     if year is None:
         data = [movie for movie in movies if movie['category'] == category]
         return JSONResponse(content=data)
@@ -124,8 +131,8 @@ def create_movie(id: int = Body(),
 
 
 #Aplicando POST con una clase
-@app.post('/movies/clase', tags=['Movies-Clase'])
-def create_movie(movie: Movie):
+@app.post('/movies/clase', tags=['Movies-Clase'], response_model=dict)
+def create_movie(movie: Movie) -> dict:
     movies.append(movie)
     return JSONResponse(content={"message": "Se ha registrado la pelicula"})
 
@@ -153,8 +160,8 @@ def update_movie(id: int,
 #Aplicando PUT con una clase
 
 
-@app.put('/movies/clase/{id}', tags=['Movies-Clase'])
-def update_movie(id: int, movie: Movie):
+@app.put('/movies/clase/{id}', tags=['Movies-Clase'], response_model=dict)
+def update_movie(id: int, movie: Movie) -> dict:
     for item in movies:
         if item["id"] == id:
             #item['id'] = id
@@ -170,8 +177,8 @@ def update_movie(id: int, movie: Movie):
 # ******Método DELETE*******
 
 
-@app.delete('/movies/{id}', tags=['Movies'])
-def delete_movie(id: int):
+@app.delete('/movies/{id}', tags=['Movies'], response_model=dict)
+def delete_movie(id: int) -> dict:
     for item in movies:
         if item["id"] == id:
             movies.remove(item)
