@@ -1,6 +1,7 @@
 #Crea la API (GET,POST,PUT,DELETE) - Body: genera cuerpo del json - Path valida ruta
+#Query valida parametros query
 
-from fastapi import FastAPI, Body, Path
+from fastapi import FastAPI, Body, Path, Query
 from fastapi.responses import HTMLResponse  #Imprime HTML
 #BaseModel crea un esquema de datos #Field valida campos
 from pydantic import BaseModel, Field
@@ -84,17 +85,18 @@ def get_movie_by_id(id: int = Path(ge=1, le=2000)):  #Path valida ruta
     return []
 
 
-#Parámetros query
+#Parámetros query - Query valida parámetros query
 
 
 @app.get('/movies/', tags=["Movies"])
-def get_movies_by_query(category: str, year: int = None):
+def get_movies_by_query(category: str = Query(min_length=5, max_length=15),
+                        year: int = Query(default=None, ge=1900, le=2024)):
     if year is None:
         return [movie for movie in movies if movie['category'] == category]
     else:
         return [
-            movie for movie in movies if movie['category'] == category
-            and movie['year'] == year  ##valid_query(year, category, movie)
+            movie for movie in movies
+            if movie['category'] == category and movie['year'] == year
         ]
 
 
