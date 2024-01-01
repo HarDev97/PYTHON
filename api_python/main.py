@@ -1,8 +1,15 @@
-#Crea la API (GET,POST,PUT,DELETE) - Body: genera cuerpo del json - Path valida ruta
+#FastAPI crea la API (GET,POST,PUT,DELETE)
+#HTTPException genera excepciones
+#Request envía una petición
+#Body: genera cuerpo del json
+#Path valida ruta
 #Query valida parametros query
+#Depends clase que indica que una clase que hereda depende de otra
 
-from fastapi import FastAPI, Body, Path, Query
-from fastapi.responses import HTMLResponse, JSONResponse  #Imprime HTML
+from fastapi import Depends, FastAPI, HTTPException, Request, Body, Path, Query
+
+#HTMLResponse  imprime HTML - JSONResponse imprime JSON
+from fastapi.responses import HTMLResponse, JSONResponse
 
 #BaseModel crea un esquema de datos #Field valida campos
 from pydantic import BaseModel, Field
@@ -10,12 +17,29 @@ from pydantic import BaseModel, Field
 #Optional genera atributos opcionales en las clases. - List para obtener modelos de respuesta
 from typing import Optional, List
 
-#Importando token
-from jwt_manager import create_token
+#Importando token y validación
+from jwt_manager import create_token, validate_token
+
+#Importando middleware de autenticación
+from fastapi.security import HTTPBearer
 
 app = FastAPI()
 app.title = "API"
 app.version = "0.0.1"
+
+
+#Creando esquema del middleware para validar token
+class JWTBearer(HTTPBearer):
+    #Deber ser una función asincrona ya que toma su tiempo
+    async def __call__(self, request: Request):
+        auth = await super().__call__(request)
+        data = validate_token(auth.credentials)
+        if data['email'] != "admin@gmail.com":
+            raise HTTPException(
+                status_code=403,
+                detail=
+                f"Credenciales son inválidas, usuario ingresado: {data['email']}"
+            )
 
 
 #Creando un esquema de información del usuario
@@ -92,12 +116,14 @@ def login(user: User):
 #Consulta todas las peliculas
 #Agregando modelo de respuesta response_model
 #Agregando códigos de estado status_code
+#Agregando validación middleware Depends
 
 
 @app.get('/movies',
          tags=['Movies'],
          response_model=List[Movie],
-         status_code=200)
+         status_code=200,
+         dependencies=[Depends(JWTBearer())])
 def get_movies() -> List[
     Movie]:  # -> List[Movie] indica que vamos a retornar una lista de peliculas
     return JSONResponse(status_code=200, content=movies)  #Retornando un JSON
