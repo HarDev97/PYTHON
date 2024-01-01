@@ -130,7 +130,7 @@ def create_movie(movie: Movie):
     return JSONResponse(content={"message": "Se ha registrado la pelicula"})
 
 
-# ******Método UPDATE*******
+# ******Método PUT*******
 
 
 @app.put('/movies/{id}', tags=['Movies'])
