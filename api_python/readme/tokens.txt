@@ -1,0 +1,3 @@
+***Instalar Tokens***
+1. Instalar modulo para ganerar tokens
+2. Crear archivo jwt_manager.py
