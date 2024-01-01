@@ -10,13 +10,21 @@ from pydantic import BaseModel, Field
 #Optional genera atributos opcionales en las clases. - List para obtener modelos de respuesta
 from typing import Optional, List
 
+#Importando token
+from jwt_manager import create_token
+
 app = FastAPI()
 app.title = "API"
 app.version = "0.0.1"
 
+
+#Creando un esquema de información del usuario
+class User(BaseModel):
+    email: str
+    password: str
+
+
 #Creando un esquema de datos
-
-
 class Movie(BaseModel):  #Se define clase
     #Definiendo atributos
     #id: int | None = None,  #Esta sintaxis indica que son atributos opcionales
