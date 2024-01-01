@@ -127,7 +127,7 @@ def create_movie(id: int = Body(),
 @app.post('/movies/clase', tags=['Movies-Clase'])
 def create_movie(movie: Movie):
     movies.append(movie)
-    return movies
+    return JSONResponse(content={"message": "Se ha registrado la pelicula"})
 
 
 # ******Método UPDATE*******
@@ -157,13 +157,14 @@ def update_movie(id: int,
 def update_movie(id: int, movie: Movie):
     for item in movies:
         if item["id"] == id:
-            item['id'] = id
+            #item['id'] = id
             item['title'] = movie.title
             item['overview'] = movie.overview
             item['year'] = movie.year
             item['rating'] = movie.rating
             item['category'] = movie.category
-            return movies
+            return JSONResponse(
+                content={"message": "Se ha modificado la pelicula"})
 
 
 # ******Método DELETE*******
@@ -174,4 +175,5 @@ def delete_movie(id: int):
     for item in movies:
         if item["id"] == id:
             movies.remove(item)
-            return movies
+            return JSONResponse(
+                content={"message": "Se ha eliminado la pelicula"})
