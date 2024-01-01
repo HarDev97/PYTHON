@@ -2,7 +2,7 @@
 #Query valida parametros query
 
 from fastapi import FastAPI, Body, Path, Query
-from fastapi.responses import HTMLResponse  #Imprime HTML
+from fastapi.responses import HTMLResponse, JSONResponse  #Imprime HTML
 #BaseModel crea un esquema de datos #Field valida campos
 from pydantic import BaseModel, Field
 from typing import Optional  #Genera atributos opcionales en las clases.
@@ -72,7 +72,7 @@ def message():
 #Consulta todas las peliculas
 @app.get('/movies', tags=['Movies'])
 def get_movies():
-    return movies
+    return JSONResponse(content=movies)  #Retornando un JSON
 
 
 #Consulta pelicula por id
@@ -81,8 +81,8 @@ def get_movie_by_id(id: int = Path(ge=1, le=2000)):  #Path valida ruta
     #Filtrando
     for item in movies:
         if item["id"] == id:
-            return item
-    return []
+            return JSONResponse(content=item)
+    return JSONResponse(content=[])
 
 
 #Parámetros query - Query valida parámetros query
@@ -92,12 +92,14 @@ def get_movie_by_id(id: int = Path(ge=1, le=2000)):  #Path valida ruta
 def get_movies_by_query(category: str = Query(min_length=5, max_length=15),
                         year: int = Query(default=None, ge=1900, le=2024)):
     if year is None:
-        return [movie for movie in movies if movie['category'] == category]
+        data = [movie for movie in movies if movie['category'] == category]
+        return JSONResponse(content=data)
     else:
-        return [
+        data = [
             movie for movie in movies
             if movie['category'] == category and movie['year'] == year
         ]
+        return JSONResponse(content=data)
 
 
 # ******Método POST*******
