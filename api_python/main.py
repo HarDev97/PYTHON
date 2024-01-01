@@ -1,4 +1,6 @@
-from fastapi import FastAPI, Body  #Crea la API (GET,POST,PUT,DELETE) - Body: genera cuerpo del json
+#Crea la API (GET,POST,PUT,DELETE) - Body: genera cuerpo del json - Path valida ruta
+
+from fastapi import FastAPI, Body, Path
 from fastapi.responses import HTMLResponse  #Imprime HTML
 #BaseModel crea un esquema de datos #Field valida campos
 from pydantic import BaseModel, Field
@@ -74,7 +76,7 @@ def get_movies():
 
 #Consulta pelicula por id
 @app.get('/movies/{id}', tags=["Movies"])
-def get_movie_by_id(id: int):
+def get_movie_by_id(id: int = Path(ge=1, le=2000)):  #Path valida ruta
     #Filtrando
     for item in movies:
         if item["id"] == id:
