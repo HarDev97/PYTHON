@@ -73,22 +73,30 @@ def message():
 
 
 #Consulta todas las peliculas
-@app.get(
-    '/movies', tags=['Movies'],
-    response_model=List[Movie])  #Agregando modelo de respuesta response_model
+#Agregando modelo de respuesta response_model
+#Agregando códigos de estado status_code
+
+
+@app.get('/movies',
+         tags=['Movies'],
+         response_model=List[Movie],
+         status_code=200)
 def get_movies() -> List[
     Movie]:  # -> List[Movie] indica que vamos a retornar una lista de peliculas
-    return JSONResponse(content=movies)  #Retornando un JSON
+    return JSONResponse(status_code=200, content=movies)  #Retornando un JSON
 
 
 #Consulta pelicula por id
-@app.get('/movies/{id}', tags=["Movies"], response_model=Movie)
+@app.get('/movies/{id}',
+         tags=["Movies"],
+         response_model=Movie,
+         status_code=200)
 def get_movie_by_id(id: int = Path(ge=1, le=2000)) -> Movie:  #Path valida ruta
     #Filtrando
     for item in movies:
         if item["id"] == id:
-            return JSONResponse(content=item)
-    return JSONResponse(content=[])
+            return JSONResponse(status_code=200, content=item)
+    return JSONResponse(status_code=404, content=[])
 
 
 #Parámetros query - Query valida parámetros query
@@ -131,10 +139,14 @@ def create_movie(id: int = Body(),
 
 
 #Aplicando POST con una clase
-@app.post('/movies/clase', tags=['Movies-Clase'], response_model=dict)
+@app.post('/movies/clase',
+          tags=['Movies-Clase'],
+          response_model=dict,
+          status_code=201)
 def create_movie(movie: Movie) -> dict:
     movies.append(movie)
-    return JSONResponse(content={"message": "Se ha registrado la pelicula"})
+    return JSONResponse(status_code=201,
+                        content={"message": "Se ha registrado la pelicula"})
 
 
 # ******Método PUT*******
@@ -177,10 +189,14 @@ def update_movie(id: int, movie: Movie) -> dict:
 # ******Método DELETE*******
 
 
-@app.delete('/movies/{id}', tags=['Movies'], response_model=dict)
+@app.delete('/movies/{id}',
+            tags=['Movies'],
+            response_model=dict,
+            status_code=200)
 def delete_movie(id: int) -> dict:
     for item in movies:
         if item["id"] == id:
             movies.remove(item)
             return JSONResponse(
+                status_code=200,
                 content={"message": "Se ha eliminado la pelicula"})
