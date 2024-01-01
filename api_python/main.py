@@ -16,27 +16,25 @@ class Movie(BaseModel):  #Se define clase
     #id: int | None = None,  #Esta sintaxis indica que son atributos opcionales
     id: Optional[
         int] = None,  #Sintaxis None indica que son atributos opcionales
-    title: str = Field(default="Titulo pelicula", min_length=5,
-                       max_length=15)  #Field valida campos
-    overview: str = Field(default="Descripción pelicula",
-                          min_length=15,
-                          max_length=55)
-    year: int = Field(default=2022, le=2022)
-    rating: float = Field(default=0.0, ge=0.0)
+    title: str = Field(min_length=5, max_length=15)  #Field valida campos
+    overview: str = Field(min_length=15, max_length=50)
+    year: int = Field(le=2024)
+    rating: float = Field(ge=1, le=10)
     category: str
 
-    # model_config = {
-    #     "json_schema_extra": {
-    #         "examples": [{
-    #             "id": 1,
-    #             "title": "Mi Pelicula",
-    #             "overview": "Descripcion de la pelicula",
-    #             "year": 2022,
-    #             "rating": 9.9,
-    #             "category": "Acción"
-    #         }]
-    #     }
-    # }
+    #Permite dejar datos de ejemplo (placeholder)
+    model_config = {
+        "json_schema_extra": {
+            "examples": [{
+                "id": 1,
+                "title": "Camino final 2",
+                "overview": "Pelicula de terror 2 basada en hechos reales",
+                "year": 2022,
+                "rating": 9.3,
+                "category": "Terror"
+            }]
+        }
+    }
 
 
 movies = [{
@@ -120,7 +118,7 @@ def create_movie(id: int = Body(),
 
 
 #Aplicando POST con una clase
-@app.post('/movies', tags=['Movies-Clase'])
+@app.post('/movies/clase', tags=['Movies-Clase'])
 def create_movie(movie: Movie):
     movies.append(movie)
     return movies
@@ -149,7 +147,7 @@ def update_movie(id: int,
 #Aplicando PUT con una clase
 
 
-@app.put('/movies/{id}', tags=['Movies-Clase'])
+@app.put('/movies/clase/{id}', tags=['Movies-Clase'])
 def update_movie(id: int, movie: Movie):
     for item in movies:
         if item["id"] == id:
