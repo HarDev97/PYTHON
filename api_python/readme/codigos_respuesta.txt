@@ -1,0 +1,8 @@
+***Códigos de respuesta***
+1. Informativos (100 -199)
+2. Respuesta correcta (200 -299)
+3. Mensajes de redirecciones (300 -399)
+4. Errores del cliente (400 -499)
+5. Errores del servidos (500 -599)
+
+Link: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status 
