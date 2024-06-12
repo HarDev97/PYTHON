@@ -34,3 +34,6 @@ template = (
     f"Hola, mi nombre es {name} y mi apellido es {last_name}, tengo {my_age} años"
 )
 print(template)
+
+# Replicar string
+print("Hola" * 3)

@@ -1,5 +1,4 @@
 # Declarando números
-
 lives = 3
 age = 20
 print(type(lives))
